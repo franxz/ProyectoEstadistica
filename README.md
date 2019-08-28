@@ -1,2 +1,2 @@
 # ProyectoEstadistica
-Trabajo de taller de programación 1
+Trabajo de taller de programación 1.
