@@ -32,9 +32,4 @@ public class Parser
     {
         return obtenerTokens(i).get(0);
     }
-
-
-    
-    
-    
 }
