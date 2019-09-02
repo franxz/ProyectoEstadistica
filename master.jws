@@ -23,6 +23,6 @@
       <string v="oracle.jdeveloper.model.PathsConfiguration/ResourceBundlesContentSet"/>
    </list>
    <list n="listOfChildren">
-      <hash><url n="URL" path="master.jpr"/></hash>
+      <hash><url n="URL" path="ProyectoEstadistica.jpr"/></hash>
    </list>
 </jws:workspace>
