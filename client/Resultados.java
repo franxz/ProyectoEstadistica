@@ -4,6 +4,7 @@ package client;
 /**
  *
  * @author koste
+ * Comentario
  */
 public class Resultados extends javax.swing.JDialog
 {

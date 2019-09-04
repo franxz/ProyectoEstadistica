@@ -30,7 +30,7 @@ public class Calculador
         return columna1;
     } 
     
-    public int frecuencia(double[] columna, double valor)
+    public int frecuencia(String[] columna, double valor)
     {
         int i, frec = 0;
         
@@ -84,4 +84,6 @@ public class Calculador
         
         return moda;
     }
+    
+    
 }
