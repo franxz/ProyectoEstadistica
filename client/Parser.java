@@ -5,31 +5,20 @@ import java.util.Collections;
 
 public class Parser
 {
-    private String textField;
-   
-    public Parser(String textField)
-    {
-        this.textField = textField;
-    }
-    
-    public ArrayList<String> obtenerLineas()
+    public ArrayList<String> obtenerLineas(String contentTF)
     {
         ArrayList<String> lineas = new ArrayList<String>();
-        String[] aux = this.textField.split("\\r\\n\\");
+        String[] aux = contentTF.split("\\r\\n\\");
         Collections.addAll(lineas, aux);
         return lineas;
     }
     
-    public ArrayList<String> obtenerTokens(int i)
+    public ArrayList<String> obtenerTokens(String contentTF, int i)
     {
         ArrayList<String> tokens = new ArrayList<String>();
-        String[] aux = this.textField.split(" ");
+        String[] aux = contentTF.split(" ");
         Collections.addAll(tokens, aux);
         return tokens;
     }
-    
-    public String obtenerOperacion(int i)
-    {
-        return obtenerTokens(i).get(0);
-    }
+
 }
