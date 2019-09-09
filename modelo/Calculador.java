@@ -9,24 +9,24 @@ public class Calculador
     public double[] suma(double[] columna1, double[] columna2)
     {
         assert columna1.length == columna2.length : "No coinciden longitudes de arreglos";
-        
+
         int i;
-        
-        for (i = 0; i< columna1.length; i++)
+
+        for (i = 0; i < columna1.length; i++)
             columna1[i] += columna2[i];
-        
+
         return columna1;
     }
-    
+
     public double[] resta(double[] columna1, double[] columna2)
     {
         assert columna1.length == columna2.length;
-        
+
         int i;
-        
-        for (i = 0; i< columna1.length; i++)
+
+        for (i = 0; i < columna1.length; i++)
             columna1[i] -= columna2[i];
-        
+
         return columna1;
     } 
     
@@ -57,20 +57,20 @@ public class Calculador
     
         return frec * 100.0; /* % */
     }
-    
+
     public double promedio(double[] columna)
     {
         double prom = 0;
         int i;
-        
+
         for (i = 0; i < columna.length; i++)
             prom += columna[i];
         if (columna.length != 0)
             prom /= columna.length;
-        
+
         return prom;
     }
-    
+
     public ArrayList<Double> moda(double[] columna)
     {
         ArrayList<Double> moda = new ArrayList<Double>();
@@ -78,7 +78,7 @@ public class Calculador
         int max = -1, cant, i;
         Iterator<Double> iter;
         double valor;
-        
+
         for (i = 0; i < columna.length; i++)
         {
             if (contador.containsKey(columna[i]))
@@ -125,7 +125,7 @@ public class Calculador
             if (contador.get(valor) == max)
                 moda.add(valor);
         }
-        
+
         return moda;
     }
     
