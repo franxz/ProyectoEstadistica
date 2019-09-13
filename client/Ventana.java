@@ -1,6 +1,7 @@
 
 package client;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JTextField;
 
 /**
@@ -9,7 +10,9 @@ import javax.swing.JTextField;
  */
 public class Ventana extends javax.swing.JFrame
 {
-
+    private Resultados ventanaResultados = new Resultados(this,true);
+    private Histograma ventanaHistograma = new Histograma(this,true);
+    
     /** Creates new form NewJFrame */
     public Ventana()
     {
@@ -19,6 +22,16 @@ public class Ventana extends javax.swing.JFrame
     public String getJTFComandos()
     {
         return jTFComandos.getText();
+    }
+
+    public Resultados getVentanaResultados()
+    {
+        return ventanaResultados;
+    }
+
+    public Histograma getVentanaHistograma()
+    {
+        return ventanaHistograma;
     }
 
     /** This method is called from within the constructor to
