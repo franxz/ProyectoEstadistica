@@ -3,10 +3,11 @@ package modelo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.TreeMap;
 
 public class Calculador
 {
-    public double[] suma(double[] columna1, double[] columna2)
+    public Double[] suma(Double[] columna1, Double[] columna2)
     {
         assert columna1.length == columna2.length : "No coinciden longitudes de arreglos";
 
@@ -18,9 +19,9 @@ public class Calculador
         return columna1;
     }
 
-    public double[] resta(double[] columna1, double[] columna2)
+    public Double[] resta(Double[] columna1, Double[] columna2)
     {
-        assert columna1.length == columna2.length;
+        assert columna1.length == columna2.length : "No coinciden longitudes de arreglos";
 
         int i;
 
@@ -30,21 +31,7 @@ public class Calculador
         return columna1;
     } 
     
-    public double frecuenciaPorcentual(double[] columna, double valor)
-    {
-        int i; 
-        double frec = 0;
-        
-        for (i = 0; i < columna.length; i++)
-            if (columna[i] == valor)
-                frec++;
-        if (columna.length != 0)
-            frec /= columna.length; 
-    
-        return frec * 100.0; /* % */
-    }
-    
-    public double frecuenciaPorcentual(String[] columna, String valor)
+    public double frecuenciaPorcentual(Object[] columna, Object valor)
     {
         int i; 
         double frec = 0;
@@ -58,7 +45,7 @@ public class Calculador
         return frec * 100.0; /* % */
     }
 
-    public double promedio(double[] columna)
+    public double promedio(Double[] columna)
     {
         double prom = 0;
         int i;
@@ -70,15 +57,15 @@ public class Calculador
 
         return prom;
     }
-
-    public ArrayList<Double> moda(double[] columna)
+    
+    public ArrayList<Object> moda(Object[] columna)
     {
-        ArrayList<Double> moda = new ArrayList<Double>();
-        HashMap<Double, Integer> contador = new HashMap<Double, Integer>();
+        ArrayList<Object> moda = new ArrayList<Object>();
+        HashMap<Object, Integer> contador = new HashMap<Object, Integer>();
         int max = -1, cant, i;
-        Iterator<Double> iter;
-        double valor;
-
+        Iterator<Object> iter;
+        Object valor;
+        
         for (i = 0; i < columna.length; i++)
         {
             if (contador.containsKey(columna[i]))
@@ -96,18 +83,19 @@ public class Calculador
             if (contador.get(valor) == max)
                 moda.add(valor);
         }
-        
+
         return moda;
     }
     
-    public ArrayList<String> moda(String[] columna)
+    public String histograma(String[] columna)
     {
-        ArrayList<String> moda = new ArrayList<String>();
-        HashMap<String, Integer> contador = new HashMap<String, Integer>();
-        int max = -1, cant, i;
+        TreeMap<String,Integer> contador = new TreeMap<String,Integer>();
+        int i, cant;
+        String actual;
         Iterator<String> iter;
-        String valor;
+        StringBuilder builder = new StringBuilder();
         
+        /* Calcula frecuencia de cada dato */
         for (i = 0; i < columna.length; i++)
         {
             if (contador.containsKey(columna[i]))
@@ -115,25 +103,31 @@ public class Calculador
             else
                 cant = 1;
             contador.put(columna[i], cant);
-            if (cant > max)
-                max = cant;
         }
+        
+        /* Armo histograma */
         iter = contador.keySet().iterator();
         while (iter.hasNext())
         {
-            valor = iter.next();
-            if (contador.get(valor) == max)
-                moda.add(valor);
+            actual = iter.next();
+            cant = contador.get(actual);
+            builder.append("\n" + actual + " : ");
+            for (i = 1; i <= cant; i++)
+                builder.append('=');
         }
-
-        return moda;
+        
+        return builder.toString();
     }
     
-    public HashMap<Double,Integer> CantidadesHistograma(Double[] columna)
+    public String histograma(Double[] columna)
     {
-        HashMap<Double, Integer> contador = new HashMap<Double, Integer>();
+        TreeMap<Double,Integer> contador = new TreeMap<Double,Integer>();
         int i, cant;
+        Double actual;
+        Iterator<Double> iter;
+        StringBuilder builder = new StringBuilder();
         
+        /* Calcula frecuencia de cada dato */
         for (i = 0; i < columna.length; i++)
         {
             if (contador.containsKey(columna[i]))
@@ -143,23 +137,17 @@ public class Calculador
             contador.put(columna[i], cant);
         }
         
-        return contador;
-    }
-    
-    public HashMap<String,Integer> CantidadesHistograma(String[] columna)
-    {
-        HashMap<String, Integer> contador = new HashMap<String, Integer>();
-        int i, cant;
-        
-        for (i = 0; i < columna.length; i++)
+        /* Armo histograma */
+        iter = contador.keySet().iterator();
+        while (iter.hasNext())
         {
-            if (contador.containsKey(columna[i]))
-                cant = contador.get(columna[i]) + 1;
-            else
-                cant = 1;
-            contador.put(columna[i], cant);
+            actual = iter.next();
+            cant = contador.get(actual);
+            builder.append("\n" + actual + " : ");
+            for (i = 1; i <= cant; i++)
+                builder.append('=');
         }
         
-        return contador;
+        return builder.toString();
     }
 }
