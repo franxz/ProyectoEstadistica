@@ -23,47 +23,49 @@ public class ParserArchivo
             
             String titulo = br.readLine(); // obtengo el titulo
             br.readLine(); // salteo la descripcion
+            int[] dimensiones = parsearFilasColumnas(br.readLine()); // [cantFilas, cantColumnas]
+	    String nombresColumnas = br.readLine();
             
-            // parseo de filas y columnas ___ pasarlo a un metodo?
-            String filasYcolumnas = br.readLine();
-            int iComa = filasYcolumnas.indexOf(",");
-            int filas = Integer.parseInt(filasYcolumnas.substring(0, iComa));
-            int columnas = Integer.parseInt(filasYcolumnas.substring(iComa+1));
-            
-            String nombresColumnas = br.readLine();
-            
-            ArrayList<String> lineas = new ArrayList<String>();
+            ArrayList<String> lineas = new ArrayList<>();
             String linea;
             boolean numerico = true; // por defecto, el conjunto de datos es numerico
-            
-            while((linea = br.readLine()) != null) // leo una linea
-            {
-                // busco un caracter no numérico, a menos que ya haya encontrado uno
-                if(numerico && noNumerico(linea)) 
-                {
-                    numerico = false;
+	    for (int i = 0; i < dimensiones[0]; i++) {
+		linea = br.readLine(); // leo una linea
+		if (numerico && noNumerico(linea)) {  // busco un caracter no numerico, a menos que ya haya encontrado uno
+                    numerico = false; // si encuentro un caracter no numerico, establezco que el conjunto de datos es no numerico
                 }
                 lineas.add(linea);
-            }
-            fr.close();
+	    }
+	    fr.close();
             
-            if(numerico) 
-            {
-                ret = new ConjuntoDatosNumericos(titulo, parsearNumeros(filas, columnas, lineas));
-            }
-            else
-            {
-                // ret = new ConjuntoDatosNoNumericos(titulo, parsearNoNumeros(filas, columnas, lineas));
+            if(numerico) {
+                ret = new ConjuntoDatosNumericos(titulo, parsearNumeros(dimensiones[0], dimensiones[1], lineas));
+            } else {
+                ret = new ConjuntoDatosNoNumericos(titulo, parsearNoNumeros(dimensiones[0], dimensiones[1], lineas));
             }
         }
         catch(Exception e)
         {
+	    // ESTO HAY QUE MODIFICARLO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	    // ESTO HAY QUE MODIFICARLO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	    // ESTO HAY QUE MODIFICARLO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	    
             System.out.println("Excepcion leyendo fichero "+ archivo + ": " + e);
+	    // ESTO HAY QUE MODIFICARLO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	    // ESTO HAY QUE MODIFICARLO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	    // ESTO HAY QUE MODIFICARLO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	    
         }
         return ret;
     }
+
+    // toma la linea que contiene la cantidad de filas y columnas, y devuelve un int[] con esta informaciÃ³n
+    private int[] parsearFilasColumnas(String linea) {
+	int iComa = linea.indexOf(",");
+	return new int [] {Integer.parseInt(linea.substring(0, iComa)), Integer.parseInt(linea.substring(iComa + 1))};  // [cantFilas, cantColumnas]
+    }
+
     
-    // chequea si una línea posee un caracter no numerico
+    // chequea si una linea posee un caracter no numerico
     private boolean noNumerico(String linea) 
     {
         for(int i = 0; i < linea.length(); i++) 
@@ -76,36 +78,60 @@ public class ParserArchivo
         return false;
     }
     
-    // aceptas lineas (filas) leidas de un archivo y devuelve una matriz de Double
+    // aceptas lineas (filas) leidas de un archivo y devuelve una matriz de double
     private double[][] parsearNumeros(int filas, int columnas, ArrayList<String> lineas)
     {
         double[][] matNumeros = new double[filas][columnas];
         for(int i = 0; i < filas; i++)
         {
-            matNumeros[i] = parsearLineaNumeros(lineas.get(i));
+            matNumeros[i] = parsearLineaNumeros(lineas.get(i), columnas);
         }
         return matNumeros;
     }
     
-    // acepta una linea (fila) y devuelve un array de Double
-    private double[] parsearLineaNumeros(String linea) 
+    // acepta una linea (fila) y devuelve un array de double (elementos de la fila)
+    private double[] parsearLineaNumeros(String linea, int cant_numeros) 
     {
-        ArrayList<String> numerosString = new ArrayList<>();
+        String[] numerosString = new String[cant_numeros]; // array que contiene los numeros en formato String
         int iComa = linea.indexOf(",");
-        while (iComa > 0) 
-        {
-            numerosString.add(linea.substring(0, iComa)); // agarro un numero
-            linea = linea.substring(iComa+1); // recorto la linea (le saco el numero que agarré)
+        for (int i = 0; i < numerosString.length - 1; i++) {
+            numerosString[i] = linea.substring(0, iComa); // agarro un numero
+            linea = linea.substring(iComa + 1); // recorto la linea (le saco el numero que agarre)
             iComa = linea.indexOf(",");
         }
-        numerosString.add(linea); // agarro el ultimo numero
+        numerosString[numerosString.length - 1] = linea; // agarro el ultimo numero
         
-        double[] numeros = new double[numerosString.size()];
+        double[] numeros = new double[cant_numeros];
         for(int i = 0; i < numeros.length; i++)
         {
-            numeros[i] = Double.parseDouble(numerosString.get(i));
+            numeros[i] = Double.parseDouble(numerosString[i]);
         }
         
         return numeros;
+    }
+    
+    // aceptas lineas (filas) leidas de un archivo y devuelve una matriz de String
+    private String[][] parsearNoNumeros(int filas, int columnas, ArrayList<String> lineas)
+    {
+        String[][] matNoNumeros = new String[filas][columnas];
+        for(int i = 0; i < filas; i++)
+        {
+            matNoNumeros[i] = parsearLineaNoNumeros(lineas.get(i), columnas);
+        }
+        return matNoNumeros;
+    }
+    
+    // acepta una linea (fila) y devuelve un array de String (elementos de la fila)
+    private String[] parsearLineaNoNumeros(String linea, int cant_datos) 
+    {
+        String[] datosString = new String[cant_datos]; // array que contiene los datos en formato String
+        int iComa = linea.indexOf(",");
+        for (int i = 0; i < datosString.length - 1; i++) {
+            datosString[i] = linea.substring(0, iComa); // agarro un dato
+            linea = linea.substring(iComa + 1); // recorto la linea (le saco el dato que agarre)
+            iComa = linea.indexOf(",");
+        }
+        datosString[datosString.length - 1] = linea; // agarro el ultimo dato
+        return datosString;
     }
 }

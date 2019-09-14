@@ -2,7 +2,7 @@ package modelo;
 
 public class ConjuntoDatosNumericos extends ConjuntoDatos
 {
-    private double[][] filas;
+    private final double[][] filas;
     
     public ConjuntoDatosNumericos(String nombre, double[][] filas)
     {
@@ -10,10 +10,16 @@ public class ConjuntoDatosNumericos extends ConjuntoDatos
         this.filas = filas;
     }
     
-    public double[] getColumna(int index) 
+    public Double[] getColumna(int index) 
     {
-        // implementar
-        double[] columna = null;
+	assert(this.filas != null);
+	assert(index >= 0);
+	assert(index < this.filas[0].length);
+	
+        Double[] columna = new Double[filas.length];
+	for (int i = 0; i < filas.length; i++) {
+	    columna[i] = filas[i][index];
+	}
         return columna;
     }
 }
