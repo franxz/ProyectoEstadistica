@@ -13,10 +13,10 @@ public class Parser
         return lineas;
     }
     
-    public ArrayList<String> obtenerTokens(String contentTF, int i)
+    public ArrayList<String> obtenerTokens(String linea_actual)
     {
         ArrayList<String> tokens = new ArrayList<String>();
-        String[] aux = contentTF.split(" ");
+        String[] aux = linea_actual.split(" ");
         Collections.addAll(tokens, aux);
         return tokens;
     }
