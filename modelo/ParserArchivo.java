@@ -1,11 +1,15 @@
 package modelo;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 public class ParserArchivo
 {
@@ -57,6 +61,64 @@ public class ParserArchivo
         }
         return ret;
     }
+    
+    public void grabarDatos(HashMap<String,ConjuntoDatosNumericos> conjuntos){//Los unicos que se graban son los conjuntos numericos.
+                    FileWriter fw;
+                    FileReader fr;
+                    int i;
+                    try {
+                        Iterator<ConjuntoDatosNumericos> it = conjuntos.values().iterator();
+                        while(it.hasNext()){
+                            ConjuntoDatosNumericos conjuntoActual = it.next();
+                            File archivo = new File("C:\\JDeveloper\\mywork\\PruebaGrabacionArchivo\\"+conjuntoActual.getNombre()+".txt");//Poner el directorio real.
+                            File archivoTemporal = new File("C:\\JDeveloper\\mywork\\PruebaGrabacionArchivo\\ArchivoTemporal.txt");//Poner el directorio real.
+                            fr = new FileReader(archivo);
+                            fw = new FileWriter(archivoTemporal);
+                            BufferedReader br = new BufferedReader(fr);
+                            BufferedWriter bw = new BufferedWriter(fw);
+                            String titulo = br.readLine();
+                            String descripcion = br.readLine();
+                            String filasColumnas = br.readLine();
+                            int[] dimensiones = parsearDimensiones(filasColumnas);
+                            String nombreColumnas = br.readLine();
+                            System.out.println(titulo+" "+descripcion+" "+filasColumnas);
+                            bw.write(titulo);
+                            bw.newLine();
+                            bw.write(descripcion);
+                            bw.newLine();
+                            bw.write(filasColumnas);
+                            bw.newLine();
+                            bw.write(nombreColumnas);
+                            bw.newLine();
+                            String convertidos;
+                            int j;
+                            for(i=0;i<dimensiones[0];i++){
+                                convertidos = this.getFila(conjuntoActual.getMatriz(),i,dimensiones[1]);
+                                bw.write(convertidos);
+                                bw.newLine();
+                            }
+                            bw.close();
+                            br.close();
+                            archivo.delete();
+                            archivoTemporal.renameTo(archivo);
+                        }
+                    } catch (IOException e) {
+                        //Ver que poner aca
+                        System.out.println("No se pudo abrir el archivo.");     
+                    }
+        }
+        
+        //Retorna una fila de la matriz en formato de string,con sus valores separados por coma.
+        private String getFila(double[][] matriz,int i,int k){
+            int j;
+            String valores = "";
+            for(j=0;j<k;j++)
+                if(j!=k-1)
+                    valores += String.valueOf(matriz[i][j])+",";
+                else
+                    valores += String.valueOf(matriz[i][j]);
+            return valores;
+        }
 
     // toma la linea que contiene la cantidad de filas y columnas, y devuelve un int[] con esta información
     private int[] parsearDimensiones(String linea) {
