@@ -1,6 +1,8 @@
 
 package client;
 
+import javax.swing.JTextArea;
+
 /**
  *
  * @author koste
@@ -25,19 +27,19 @@ public class Histograma extends javax.swing.JDialog
     {
 
         jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTAHistograma = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        jTAHistograma.setEditable(false);
+        jTAHistograma.setColumns(20);
+        jTAHistograma.setRows(5);
+        jScrollPane1.setViewportView(jTAHistograma);
+
+        jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
@@ -47,6 +49,20 @@ public class Histograma extends javax.swing.JDialog
     /**
      * @param args the command line arguments
      */
+    
+    
+    public JTextArea getJTAHistograma()
+    {
+        return jTAHistograma;
+    }
+    
+    public void agregaHistograma(String str)
+    {
+        this.getJTAHistograma().setText(str);
+    }
+
+
+
     public static void main(String args[])
     {
         /* Set the Nimbus look and feel */
@@ -134,6 +150,8 @@ public class Histograma extends javax.swing.JDialog
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTAHistograma;
     // End of variables declaration//GEN-END:variables
 
 }

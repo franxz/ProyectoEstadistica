@@ -4,10 +4,24 @@ import client.IVista;
 
 import client.Parser;
 
+import errors.Error000;
+
+import errors.Error001;
+import errors.Error002;
+
+import errors.Error003;
+import errors.Error004;
+
+import errors.Error005;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.io.File;
+
 import java.util.ArrayList;
+
+import java.util.HashMap;
 
 import javax.swing.JFrame;
 
@@ -15,9 +29,11 @@ public class Controlador implements ActionListener
 {
     public static final String[] Comandos = {"LISTAR","USAR","SUMAR","RESTAR","FRECUENCIA","PROMEDIO","HISTOGRAMA","MODA"};
     public static final String[] Salidas = {"PANTALLA","IMPRESORA"};
+    public static final int MAXCARFILES = 100;
     private IVista ventana;
     private Parser parser = new Parser(); //ventana.getJTFComandos()
     private Calculador calc = new Calculador();
+    HashMap<String, ConjuntoDatos> hashmap = new HashMap<String, ConjuntoDatos>();
     
     public Controlador(IVista ventana)
     {
@@ -35,7 +51,7 @@ public class Controlador implements ActionListener
         }
     }
     
-    public void ejecutarComandos(ArrayList<String> lineas)
+    public void ejecutarComandos(ArrayList<String> lineas) throws Error000, Error001,Error002, Error003, Error004,Error005
     {
         for(int i=0; i<lineas.size(); i++) //cada iteracion es el comando siguiente
         {
@@ -45,19 +61,29 @@ public class Controlador implements ActionListener
             
             if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[0])) //aca entra si tiene que listar
             {
-                //LISTAR
+                this.ventana.getVentanaResultados().agregaResultado("Lista de archivos disponibles:\n");
+                resString = this.listarArchivos();
+                this.ventana.getVentanaResultados().agregaResultado(resString);
             }
             else if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[1])) //aca entra si es usar
             {
                 if((lineaActual.get(1)!= null) && (isConjuntoExistente(lineaActual.get(1)))) //verifico primero error de sintaxis y luego si existe el conj.
                 {
-                    //  USAR
+                    if(hashmap.containsKey(lineaActual.get(1)))
+                    {
+                        //marcar conjunto de datos, para trabajar siempre con ese.
+                    }
+                    else
+                    {
+                        //abrirConjuntoDatos();
+                    }
                 }
                 else if((lineaActual.get(1)!= null))
-                    {
-                        throw new Error000();
-                    }else
-                        throw new Error006(); // Error006: conjunto de datos inexistente
+                {
+                    throw new Error000();
+                }
+                else
+                    throw new Error006(); // Error006: conjunto de datos inexistente
             }
             else if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[2]) || 
                     lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[3])) //entro si es suma o resta
@@ -67,9 +93,11 @@ public class Controlador implements ActionListener
                        (lineaActual.get(3)!= null) ) //verifico la sintaxis
                     {
                         if(isSalidaValida(lineaActual.get(3))){ //verifico la salida valida
-                            //VERIFICAR SI SON DATOS NUMERICOS
-                            //obtencion columna1
-                            //obtencion columna2
+                            //VERIFICAR SI SON DATOS NUMERICOS!
+                            
+                            double[] columna1= /*VER QUE PONER ACA */.getColumna(lineaActual.get(1));
+                            double[] columna2= /*VER QUE PONER ACA */.getColumna(lineaActual.get(2));
+                            
                             if(isColumnaExistente(columna1) && isColumnaExistente(columna2)) //aca tendrian que venir las dos columnas
                             {
                                 if(isDatosNoFaltantes(columna1) && isDatosNoFaltantes(columna2))
@@ -119,7 +147,7 @@ public class Controlador implements ActionListener
                 {
                     if(isSalidaValida(lineaActual.get(2))) //verifico salida valida
                     {
-                        //obtencion columna
+                        //OBTENER COLUMNA SEGUN SEA NRO A STRING!
                         if(isColumnaExistente(columna))
                         {
                             if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[5])) //aca entra si es promedio
@@ -136,25 +164,13 @@ public class Controlador implements ActionListener
                             }
                             else if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[6])) //aca entra si es histograma
                             {
-                                if(isDatosNumericos(columna))
-                                {
-                                    //histograma de numeros
-                                }
-                                else
-                                {
-                                    //histograma de strings
-                                }
+                                //LLAMAR A HISTOGRAMA SEGUN EL CONJUNTO DE DATOS Y GUARDAR EN resString!
+                                this.ventana.getVentanaResultados().agregaResultado(resString);
                             }
                             else //aca entra si es moda
                             {
-                                if(isDatosNumericos(columna))
-                                {
-                                    //moda de numeros
-                                }
-                                else
-                                {
-                                    //moda de strings
-                                }
+                                //LLAMAR A MODA SEGUN EL CONJUNTO DE DATOS Y GUARDAR EN resString!
+                                this.ventana.getVentanaResultados().agregaResultado(resString);
                             }
                         }
                         else
@@ -226,6 +242,21 @@ public class Controlador implements ActionListener
     {
         
     }
+    
+    public String listarArchivos()
+    {
+        StringBuilder sb = new StringBuilder(Controlador.MAXCARFILES);
+        File curDir = new File(".");
+        File[] filesList = curDir.listFiles();
+        for(File f : filesList){
+            if(f.isFile()){
+                sb.append(f.getName());
+                sb.append("\n");
+            }
+        }
+        return sb.toString();
+    }
+    
     
     public String arrayToString(double[] columna)
     {
