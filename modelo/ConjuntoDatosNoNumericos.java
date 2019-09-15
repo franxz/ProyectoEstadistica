@@ -4,22 +4,33 @@ public class ConjuntoDatosNoNumericos extends ConjuntoDatos
 {
     private final String[][] filas;
     
-    public ConjuntoDatosNoNumericos(String nombre, String[][] filas)
+    public ConjuntoDatosNoNumericos(String nombre, String[] nombresColumnas, String[][] filas)
     {
-        super(nombre, ConjuntoDatos.CONJUNTO_NO_NUMERICO);
+        super(nombre, nombresColumnas, ConjuntoDatos.CONJUNTO_NO_NUMERICO);
         this.filas = filas;
     }
     
-    public String[] getColumna(int index) 
+    public String[] getColumna(String nombreColumna) 
     {
-	assert(this.filas != null);
-	assert(index >= 0);
-	assert(index < this.filas[0].length);
-	
-        String[] columna = new String[filas.length];
+	String[] columna = new String[filas.length];
+	int iColumna = this.nombresColumnas.get(nombreColumna);
+        
 	for (int i = 0; i < filas.length; i++) {
-	    columna[i] = filas[i][index];
+	    columna[i] = filas[i][iColumna];
 	}
+	
         return columna;
+    }
+    
+    public void actualizarColumna(String nombreColumna, String[] columnaActualizada) {
+	int iColumna = this.nombresColumnas.get(nombreColumna);
+	
+	for (int i = 0; i < filas.length; i++) {
+	    filas[i][iColumna] = columnaActualizada[i];
+	}
+    }
+    
+    public String[][] getMatriz() {
+	return filas;
     }
 }
