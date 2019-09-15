@@ -6,7 +6,7 @@ public class ConjuntoDatosNumericos extends ConjuntoDatos
     
     public ConjuntoDatosNumericos(String nombre, double[][] filas)
     {
-        super(nombre);
+        super(nombre, ConjuntoDatos.CONJUNTO_NUMERICO);
         this.filas = filas;
     }
     

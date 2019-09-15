@@ -6,7 +6,7 @@ public class ConjuntoDatosNoNumericos extends ConjuntoDatos
     
     public ConjuntoDatosNoNumericos(String nombre, String[][] filas)
     {
-        super(nombre);
+        super(nombre, ConjuntoDatos.CONJUNTO_NO_NUMERICO);
         this.filas = filas;
     }
     
