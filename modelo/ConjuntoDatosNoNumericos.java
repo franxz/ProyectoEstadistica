@@ -22,4 +22,8 @@ public class ConjuntoDatosNoNumericos extends ConjuntoDatos
 	}
         return columna;
     }
+    
+    public int cantCol(){
+        return this.filas[0].length;
+    }
 }

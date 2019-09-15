@@ -8,4 +8,10 @@ public abstract class ConjuntoDatos
     {
         this.nombre = nombre;
     }
+
+    public String getNombre() {
+        return nombre;
+    }
+    
+    public abstract int cantCol();
 }

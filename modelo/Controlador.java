@@ -37,125 +37,131 @@ public class Controlador implements ActionListener
     
     public void ejecutarComandos(ArrayList<String> lineas)
     {
-        for(int i=0; i<lineas.size(); i++)
+        for(int i=0; i<lineas.size(); i++) //cada iteracion es el comando siguiente
         {
-            ArrayList<String> lineaActual = parser.obtenerTokens(ventana.getJTFComandos(),i);
+            ArrayList<String> lineaActual = parser.obtenerTokens(lineas.get(i)); // aca se envia el comando correspondiente a esta vuelta para devolverlo parseado
             
             String resString=null;
             
-            if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[0]))
+            if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[0])) //aca entra si tiene que listar
             {
-                
+                //LISTAR
             }
-            else if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[1]))
+            else if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[1])) //aca entra si es usar
             {
-                if((lineaActual.get(1)!= null) && (isConjuntoExistente(lineaActual.get(1))))
+                if((lineaActual.get(1)!= null) && (isConjuntoExistente(lineaActual.get(1)))) //verifico primero error de sintaxis y luego si existe el conj.
                 {
-                    
+                    //  USAR
                 }
-                else
-                    throw new Error006(); // Error006: conjunto de datos inexistente
+                else if((lineaActual.get(1)!= null))
+                    {
+                        throw new Error000();
+                    }else
+                        throw new Error006(); // Error006: conjunto de datos inexistente
             }
             else if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[2]) || 
-                    lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[3]))
+                    lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[3])) //entro si es suma o resta
             {
-                if((lineaActual.get(3)!= null) && isSalidaValida(lineaActual.get(3)))
-                {
-                    if((lineaActual.get(1)!= null) && (!isSalidaValida(lineaActual.get(1))) && (lineaActual.get(2)!= null) &&
-                       (!isSalidaValida(lineaActual.get(2))))
+                    if((lineaActual.get(1)!= null) && !isSalidaValida(lineaActual.get(1)) &&
+                       (lineaActual.get(2)!= null) && !isSalidaValida(lineaActual.get(2)) &&
+                       (lineaActual.get(3)!= null) ) //verifico la sintaxis
                     {
-                        //VERIFICAR SI SON DATOS NUMERICOS
-                        //obtencion columna1
-                        //obtencion columna2
-                        if(isDimensionesIguales(columna1,columna2)) //aca tendrian que venir las dos columnas
-                        {
-                            if(isColumnaExistente(columna1) && isColumnaExistente(columna2))
+                        if(isSalidaValida(lineaActual.get(3))){ //verifico la salida valida
+                            //VERIFICAR SI SON DATOS NUMERICOS
+                            //obtencion columna1
+                            //obtencion columna2
+                            if(isColumnaExistente(columna1) && isColumnaExistente(columna2)) //aca tendrian que venir las dos columnas
                             {
-                                if(isDatosNoFaltantes(columna1) && isDatosNoFaltantes(columna2)) //si es todo valido
+                                if(isDatosNoFaltantes(columna1) && isDatosNoFaltantes(columna2))
                                 {
-                                    double[] res={0};
-                                    if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[2])) //suma
+                                    if(isDimensionesIguales(columna1,columna2)) //si es todo valido
                                     {
-                                        res = suma(columna1,columna2);
-                                        this.ventana.getVentanaResultados().agregaResultado("Suma:\n");
+                                        double[] res={0};
+                                        if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[2])) //suma
+                                        {
+                                            res = suma(columna1,columna2);
+                                            this.ventana.getVentanaResultados().agregaResultado("Suma:\n");
+                                        }
+                                        else //resta
+                                        {
+                                            res = resta(columna1,columna2);
+                                            this.ventana.getVentanaResultados().agregaResultado("Resta:\n");
+                                        }   
+                                        resString = arrayToString(res);
+                                        this.ventana.getVentanaResultados().agregaResultado(resString);
                                     }
-                                    else //resta
-                                    {
-                                        res = resta(columna1,columna2);
-                                        this.ventana.getVentanaResultados().agregaResultado("Resta:\n");
-                                    }   
-                                    resString = arrayToString(res);
-                                    this.ventana.getVentanaResultados().agregaResultado(resString);
+                                    else
+                                        throw new Error004();
                                 }
                                 else
                                     throw new Error005();
                             }
                             else
                                 throw new Error003();
+                            //verificar otros errores (columnas validas,etc)
                         }
                         else
-                            throw new Error004();
-                        //verificar otros errores (columnas validas,etc)
+                            throw new Error002();
                     }
                     else
                         throw new Error000();
-                }
-                else
-                    throw new Error002();
-
             }
-            else if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[4]))
+            else if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[4])) // entra si es frecuencia
             {
-                
+                //FRECUENCIA
             }
             else if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[5]) || 
                     lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[6]) ||
-                    lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[7]))
+                    lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[7]))  //entra si es promedio histograma o moda
             {
                 if((lineaActual.get(1)!= null) && !isSalidaValida(lineaActual.get(1)) &&
-                   (lineaActual.get(2)!= null) && isSalidaValida(lineaActual.get(2)))
+                   (lineaActual.get(2)!= null)) //verifico sintaxis
                 {
-                    //obtencion columna
-                    if(isColumnaExistente(columna))
+                    if(isSalidaValida(lineaActual.get(2))) //verifico salida valida
                     {
-                        //dato vacio?
-                        if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[5]))
+                        //obtencion columna
+                        if(isColumnaExistente(columna))
                         {
-                            if(isDatosNumericos(columna))
+                            if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[5])) //aca entra si es promedio
                             {
-                                double res = calc.promedio(columna);
-                                resString = res.toString();
-                                this.ventana.getVentanaResultados().agregaResultado(resString);
-                                
+                                if(isDatosNumericos(columna))
+                                {
+                                    double res = calc.promedio(columna);
+                                    resString = res.toString();
+                                    this.ventana.getVentanaResultados().agregaResultado(resString);
+                                    
+                                }
+                                else
+                                    throw new Error004();
                             }
-                            else
-                                throw new Error004();
-                        }
-                        else if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[6]))
-                        {
-                            if(isDatosNumericos(columna))
+                            else if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[6])) //aca entra si es histograma
                             {
-                                //histograma de numeros
+                                if(isDatosNumericos(columna))
+                                {
+                                    //histograma de numeros
+                                }
+                                else
+                                {
+                                    //histograma de strings
+                                }
                             }
-                            else
+                            else //aca entra si es moda
                             {
-                                //histograma de strings
+                                if(isDatosNumericos(columna))
+                                {
+                                    //moda de numeros
+                                }
+                                else
+                                {
+                                    //moda de strings
+                                }
                             }
                         }
                         else
-                        {
-                            if(isDatosNumericos(columna))
-                            {
-                                //moda de numeros
-                            }
-                            else
-                            {
-                                //moda de strings
-                            }
+                            throw new Error003();
                         }
-                    }
                     else
-                        throw new Error003();
+                        throw new Error002();
                 }
                 else
                     throw new Error000();            
@@ -165,7 +171,7 @@ public class Controlador implements ActionListener
         }
     }
     
-    public boolean existeComando(String comando)
+    /*public boolean existeComando(String comando)
     {
         int i=0;
         boolean existe = (comando.equalsIgnoreCase(Controlador.Comandos[0]));
@@ -175,30 +181,40 @@ public class Controlador implements ActionListener
             existe = (comando.equalsIgnoreCase(Controlador.Comandos[i]));
         }
         return existe;
-    }
+    }*/
     
     public boolean isSalidaValida(String token)
     {
         int i=0;
         boolean retorno = token.equalsIgnoreCase(Controlador.Salidas[0]);;
-        while(i < Controlador.Salidas.length)
+        /*while(i < Controlador.Salidas.length)
         {
             i++;
-            retorno = token.equalsIgnoreCase(Controlador.Salidas[i]);
-        }
+            retorno = token.equalsIgnoreCase(Controlador.Salidas[i]); ESTO NO IRIA
+        }*/
         return retorno;
     }
     
     public boolean isConjuntoExistente(String nombre)
     {
+        //habria que buscar en el contenedor de conjuntos si existe el pedido
     }
     
     public boolean isColumnaExistente(double[] columna)
     {
+        //aca habria que llamar al cant col del conjuntoDatos
     }
     
     public boolean isDatosNoFaltantes(double[] columna)
     {
+        boolean res=false;
+        int i=0;
+        
+        while( i<columna.length && res == false ){
+            res = columna[i] == null;
+        }
+        
+        return res;
     }
     
     public boolean isDimensionesIguales(double[] columna1, double[] columna2)
@@ -208,6 +224,7 @@ public class Controlador implements ActionListener
     
     public boolean isDatosNumericos()
     {
+        
     }
     
     public String arrayToString(double[] columna)
