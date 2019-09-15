@@ -7,7 +7,7 @@ import java.util.TreeMap;
 
 public class Calculador
 {
-    public Double[] suma(Double[] columna1, Double[] columna2)
+    public static Double[] suma(Double[] columna1, Double[] columna2)
     {
         assert columna1.length == columna2.length : "No coinciden longitudes de arreglos";
 
@@ -19,7 +19,7 @@ public class Calculador
         return columna1;
     }
 
-    public Double[] resta(Double[] columna1, Double[] columna2)
+    public static Double[] resta(Double[] columna1, Double[] columna2)
     {
         assert columna1.length == columna2.length : "No coinciden longitudes de arreglos";
 
@@ -31,7 +31,7 @@ public class Calculador
         return columna1;
     } 
     
-    public double frecuenciaPorcentual(Object[] columna, Object valor)
+    public static double frecuenciaPorcentual(Object[] columna, Object valor)
     {
         int i; 
         double frec = 0;
@@ -45,7 +45,7 @@ public class Calculador
         return frec * 100.0; /* % */
     }
 
-    public double promedio(Double[] columna)
+    public static double promedio(Double[] columna)
     {
         double prom = 0;
         int i;
@@ -58,7 +58,7 @@ public class Calculador
         return prom;
     }
     
-    public ArrayList<Object> moda(Object[] columna)
+    public static ArrayList<Object> moda(Object[] columna)
     {
         ArrayList<Object> moda = new ArrayList<Object>();
         HashMap<Object, Integer> contador = new HashMap<Object, Integer>();
@@ -87,7 +87,7 @@ public class Calculador
         return moda;
     }
     
-    public String histograma(String[] columna)
+    public static String histograma(String[] columna)
     {
         TreeMap<String,Integer> contador = new TreeMap<String,Integer>();
         int i, cant;
@@ -119,7 +119,7 @@ public class Calculador
         return builder.toString();
     }
     
-    public String histograma(Double[] columna)
+    public static String histograma(Double[] columna)
     {
         TreeMap<Double,Integer> contador = new TreeMap<Double,Integer>();
         int i, cant;
