@@ -3,6 +3,7 @@ package modelo;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 
 import java.util.ArrayList;
 
@@ -13,7 +14,7 @@ public class ParserArchivo
     }
     
     // acepta un archivo y te devuelve un ConjuntoDatos
-    public ConjuntoDatos obtenerConjuntoDatos(File archivo) {
+    public ConjuntoDatos obtenerConjuntoDatos(File archivo) throws IOException {
         ConjuntoDatos ret = null;
         try {
             FileReader fr = new FileReader(archivo);
@@ -51,11 +52,8 @@ public class ParserArchivo
                 ret = new ConjuntoDatosNoNumericos(titulo, nombresColumnas, parsearNoNumeros(dimensiones[0], dimensiones[1], lineas));
             }
         }
-        catch(Exception e)
-        {
-	    // ESTO HAY QUE MODIFICARLO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!	    
-            System.out.println("Excepcion leyendo fichero "+ archivo + ": " + e);
-	    
+        catch(IOException e) {
+	    throw e;
         }
         return ret;
     }
