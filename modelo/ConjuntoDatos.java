@@ -28,4 +28,10 @@ public abstract class ConjuntoDatos
     protected void print() {
 	System.out.println(this.nombre);
     }
+
+    public String getNombre() {
+        return nombre;
+    }
+    
+    public abstract int cantCol();
 }
