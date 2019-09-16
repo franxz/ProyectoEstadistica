@@ -9,22 +9,26 @@ public class ConjuntoDatosNoNumericos extends ConjuntoDatos
     this.filas = filas;
   }
 
-  public String[] getColumna(String nombreColumna) {
-    String[] columna = new String[filas.length];
-    int iColumna = this.nombresColumnas.get(nombreColumna);
-
-    for (int i = 0; i < filas.length; i++) {
-      columna[i] = filas[i][iColumna];
+  public Object[] getColumna(String nombreColumna) 
+  {
+    String[] columna = null;
+    Integer iColumna = this.nombresColumnas.get(nombreColumna);
+    
+    if (iColumna != null)
+    {
+        columna = new String[filas.length];
+        for (int i = 0; i < filas.length; i++)
+          columna[i] = filas[i][iColumna];
     }
-
     return columna;
   }
     
-  public void actualizarColumna(String nombreColumna, String[] columnaActualizada) {
+  @Override
+  public void actualizarColumna(String nombreColumna, Object[] columnaActualizada) {
     int iColumna = this.nombresColumnas.get(nombreColumna);
 
     for (int i = 0; i < filas.length; i++) {
-      filas[i][iColumna] = columnaActualizada[i];
+      filas[i][iColumna] = (String) columnaActualizada[i];
     }
   }
 
@@ -35,4 +39,10 @@ public class ConjuntoDatosNoNumericos extends ConjuntoDatos
   public int cantCol(){
     return this.filas[0].length;
   }
+
+    @Override
+    public boolean isNumerico()
+    {
+        return false;
+    }
 }

@@ -5,7 +5,7 @@ import java.util.Collections;
 
 public class Parser
 {
-    public ArrayList<String> obtenerLineas(String contentTF)
+    public static ArrayList<String> obtenerLineas(String contentTF)
     {
         ArrayList<String> lineas = new ArrayList<String>();
         String[] aux = contentTF.split("\\r\\n\\");
@@ -13,7 +13,7 @@ public class Parser
         return lineas;
     }
     
-    public ArrayList<String> obtenerTokens(String linea_actual)
+    public static ArrayList<String> obtenerTokens(String linea_actual)
     {
         ArrayList<String> tokens = new ArrayList<String>();
         String[] aux = linea_actual.split(" ");
