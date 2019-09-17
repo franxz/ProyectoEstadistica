@@ -18,7 +18,8 @@ public class ParserArchivo
     }
     
     // acepta un archivo y te devuelve un ConjuntoDatos
-    public ConjuntoDatos obtenerConjuntoDatos(File archivo) throws IOException {
+    public static ConjuntoDatos obtenerConjuntoDatos(File archivo)
+    {
         ConjuntoDatos ret = null;
         try {
             FileReader fr = new FileReader(archivo);
@@ -57,12 +58,12 @@ public class ParserArchivo
             }
         }
         catch(IOException e) {
-	    throw e;
+            e.printStackTrace();
         }
         return ret;
     }
     
-    public void grabarDatos(HashMap<String,ConjuntoDatosNumericos> conjuntos){//Los unicos que se graban son los conjuntos numericos.
+    public static void grabarDatos(HashMap<String,ConjuntoDatosNumericos> conjuntos){//Los unicos que se graban son los conjuntos numericos.
                     FileWriter fw;
                     FileReader fr;
                     int i;
@@ -92,8 +93,9 @@ public class ParserArchivo
                             bw.newLine();
                             String convertidos;
                             int j;
-                            for(i=0;i<dimensiones[0];i++){
-                                convertidos = this.getFila(conjuntoActual.getMatriz(),i,dimensiones[1]);
+                            for(i=0;i<dimensiones[0];i++)
+                            {
+                                convertidos = ParserArchivo.getFila(conjuntoActual.getMatriz(),i,dimensiones[1]);
                                 bw.write(convertidos);
                                 bw.newLine();
                             }
@@ -102,14 +104,16 @@ public class ParserArchivo
                             archivo.delete();
                             archivoTemporal.renameTo(archivo);
                         }
-                    } catch (IOException e) {
+                    } catch (IOException e) 
+                    {
                         //Ver que poner aca
                         System.out.println("No se pudo abrir el archivo.");     
                     }
         }
         
         //Retorna una fila de la matriz en formato de string,con sus valores separados por coma.
-        private String getFila(double[][] matriz,int i,int k){
+        private static String getFila(double[][] matriz,int i,int k)
+        {
             int j;
             String valores = "";
             for(j=0;j<k;j++)
@@ -121,13 +125,13 @@ public class ParserArchivo
         }
 
     // toma la linea que contiene la cantidad de filas y columnas, y devuelve un int[] con esta información
-    private int[] parsearDimensiones(String linea) {
+    private static int[] parsearDimensiones(String linea) {
 	int iComa = linea.indexOf(",");
 	return new int[] {Integer.parseInt(linea.substring(0, iComa)), Integer.parseInt(linea.substring(iComa + 1))};  // [cantFilas, cantColumnas]
     }
     
     // toma una linea que contiene elementos separados por comas, y devuelve un String[] que contiene estos elementos
-    private String[] parsearLineaPorComas(String linea, int cantElementos) {
+    private static String[] parsearLineaPorComas(String linea, int cantElementos) {
 	String[] elementos = new String[cantElementos];
 	int iComa = linea.indexOf(",");
 	
@@ -142,7 +146,7 @@ public class ParserArchivo
     }
     
     // chequea si una linea posee un caracter no numerico
-    private boolean noNumerico(String linea) 
+    private static boolean noNumerico(String linea) 
     {
         for(int i = 0; i < linea.length(); i++) 
         {
@@ -155,7 +159,7 @@ public class ParserArchivo
     }
     
     // aceptas lineas (filas) leidas de un archivo y devuelve una matriz de double
-    private double[][] parsearNumeros(int cantFilas, int cantColumnas, ArrayList<String> lineas)
+    private static double[][] parsearNumeros(int cantFilas, int cantColumnas, ArrayList<String> lineas)
     {
         double[][] matNumeros = new double[cantFilas][cantColumnas];
         
@@ -167,7 +171,7 @@ public class ParserArchivo
     }
     
     // acepta una linea (fila) y devuelve un double[] (elementos de la fila)
-    private double[] parsearLineaNumeros(String linea, int cantElementos) 
+    private static double[] parsearLineaNumeros(String linea, int cantElementos) 
     {
         double[] numeros = new double[cantElementos];
 	String[] numerosString = parsearLineaPorComas(linea, cantElementos);
@@ -180,7 +184,7 @@ public class ParserArchivo
     }
     
     // aceptas lineas (filas) leidas de un archivo y devuelve una matriz de String
-    private String[][] parsearNoNumeros(int cantFilas, int cantColumnas, ArrayList<String> lineas)
+    private static String[][] parsearNoNumeros(int cantFilas, int cantColumnas, ArrayList<String> lineas)
     {
         String[][] matNoNumeros = new String[cantFilas][cantColumnas];
         

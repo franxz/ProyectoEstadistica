@@ -4,18 +4,12 @@ import client.IVista;
 
 import client.Parser;
 
-import errors.Error000;
-
-import errors.Error001;
-import errors.Error002;
-
-import errors.Error003;
-import errors.Error004;
-
-import errors.Error005;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import java.awt.event.WindowAdapter;
+
+import java.awt.event.WindowEvent;
 
 import java.io.File;
 
@@ -23,41 +17,40 @@ import java.util.ArrayList;
 
 import java.util.HashMap;
 
-import javax.swing.JFrame;
-
-public class Controlador implements ActionListener
+public class Controlador extends WindowAdapter implements ActionListener
 {
     public static final String[] Comandos = {"LISTAR","USAR","SUMAR","RESTAR","FRECUENCIA","PROMEDIO","HISTOGRAMA","MODA"};
     public static final String[] Salidas = {"PANTALLA","IMPRESORA"};
     public static final int MAXCARFILES = 100;
     private IVista ventana;
-    private Parser parser = new Parser(); //ventana.getJTFComandos()
-    private Calculador calc = new Calculador();
-    HashMap<String, ConjuntoDatos> hashmap = new HashMap<String, ConjuntoDatos>();
+    private HashMap<String, ConjuntoDatos> conjuntosDatos = new HashMap<String, ConjuntoDatos>();
+    private ConjuntoDatos conjuntoActivo = null;
     
     public Controlador(IVista ventana)
     {
         this.ventana = ventana;
+        this.ventana.addActionListener(this);
+        this.ventana.addWindowListener(this);
     }
-
 
     @Override
     public void actionPerformed(ActionEvent evento)
     {
         if(evento.getActionCommand().equalsIgnoreCase(IVista.EjecutarComandos))
         {
-            ArrayList<String> lineas = parser.obtenerLineas(ventana.getJTFComandos());
-            
+            ArrayList<String> lineas = Parser.obtenerLineas(ventana.getJTFComandos());
+            this.ejecutarComandos(lineas);
         }
     }
     
-    public void ejecutarComandos(ArrayList<String> lineas) throws Error000, Error001,Error002, Error003, Error004,Error005
+    public void ejecutarComandos(ArrayList<String> lineas)
     {
+        Object[] columna;
+        String resString=null;
+        
         for(int i=0; i<lineas.size(); i++) //cada iteracion es el comando siguiente
         {
-            ArrayList<String> lineaActual = parser.obtenerTokens(lineas.get(i)); // aca se envia el comando correspondiente a esta vuelta para devolverlo parseado
-            
-            String resString=null;
+            ArrayList<String> lineaActual = Parser.obtenerTokens(lineas.get(i)); // aca se envia el comando correspondiente a esta vuelta para devolverlo parseado
             
             if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[0])) //aca entra si tiene que listar
             {
@@ -67,76 +60,103 @@ public class Controlador implements ActionListener
             }
             else if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[1])) //aca entra si es usar
             {
-                if((lineaActual.get(1)!= null) && (isConjuntoExistente(lineaActual.get(1)))) //verifico primero error de sintaxis y luego si existe el conj.
+                if((lineaActual.get(1)!= null)) //verifico primero error de sintaxis y luego si existe el conj.
                 {
-                    if(hashmap.containsKey(lineaActual.get(1)))
+                    if(conjuntosDatos.containsKey(lineaActual.get(1)))
                     {
-                        //marcar conjunto de datos, para trabajar siempre con ese.
+                        this.conjuntoActivo = conjuntosDatos.get(lineaActual.get(1));
                     }
                     else
                     {
-                        //abrirConjuntoDatos();
-                    }
+                        File archivoActual = this.abrirArchivo(lineaActual.get(1));
+                        if(archivoActual != null) //si está en la carpeta
+                        {
+                            conjuntoActivo = ParserArchivo.obtenerConjuntoDatos(archivoActual);
+                        }
+                        else
+                            this.ventana.informarAlUsuario("No se pudo abrir el archivo, o no existe el archivo.");   
+                    }  
                 }
-                else if((lineaActual.get(1)!= null))
-                {
-                    throw new Error000();
-                }
-                else
-                    throw new Error006(); // Error006: conjunto de datos inexistente
+                else 
+                    this.ventana.informarAlUsuario("Error de sintaxis, debe indicar el nombre del conjunto de datos");
             }
             else if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[2]) || 
                     lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[3])) //entro si es suma o resta
             {
                     if((lineaActual.get(1)!= null) && !isSalidaValida(lineaActual.get(1)) &&
-                       (lineaActual.get(2)!= null) && !isSalidaValida(lineaActual.get(2)) &&
-                       (lineaActual.get(3)!= null) ) //verifico la sintaxis
+                       (lineaActual.get(2)!= null) && !isSalidaValida(lineaActual.get(2))) //verifico la sintaxis
                     {
-                        if(isSalidaValida(lineaActual.get(3))){ //verifico la salida valida
-                            //VERIFICAR SI SON DATOS NUMERICOS!
-                            
-                            double[] columna1= /*VER QUE PONER ACA */.getColumna(lineaActual.get(1));
-                            double[] columna2= /*VER QUE PONER ACA */.getColumna(lineaActual.get(2));
-                            
-                            if(isColumnaExistente(columna1) && isColumnaExistente(columna2)) //aca tendrian que venir las dos columnas
+                            if(conjuntoActivo.isNumerico())
                             {
-                                if(isDatosNoFaltantes(columna1) && isDatosNoFaltantes(columna2))
+                                Double[] columna1= (Double[]) conjuntoActivo.getColumna(lineaActual.get(1));
+                                Double[] columna2= (Double[]) conjuntoActivo.getColumna(lineaActual.get(2));
+                                
+                                if(columna1 != null && columna2 != null) //aca tendrian que venir las dos columnas
                                 {
-                                    if(isDimensionesIguales(columna1,columna2)) //si es todo valido
+                                    if(isDatosNoFaltantes(columna1) && isDatosNoFaltantes(columna2))
                                     {
-                                        double[] res={0};
-                                        if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[2])) //suma
+                                        if (columna1.length == columna2.length) //Pablo: creo que sobra este if
+                                         //si es todo valido
                                         {
-                                            res = suma(columna1,columna2);
-                                            this.ventana.getVentanaResultados().agregaResultado("Suma:\n");
+                                            Double[] res= null;
+                                            if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[2])) //suma
+                                                res = Calculador.suma(columna1,columna2);
+                                            else //resta
+                                                res = Calculador.resta(columna1,columna2);
+                                            this.conjuntoActivo.actualizarColumna(lineaActual.get(1), res);
+                                            if (lineaActual.get(3) != null) /* Esta habilitada alguna salida */
+                                                if (this.isSalidaValida(lineaActual.get(3)))
+                                                {
+                                                    if (lineaActual.get(0).equalsIgnoreCase(Comandos[2]))
+                                                        resString = "Suma:\n";
+                                                    else
+                                                        resString = "Resta:\n";
+                                                    resString += arrayToString(res);
+                                                    this.ventana.getVentanaResultados().agregaResultado(resString);
+                                                }
+                                                else
+                                                    this.ventana.informarAlUsuario("Error002: Dispositivo desconocido");
                                         }
-                                        else //resta
-                                        {
-                                            res = resta(columna1,columna2);
-                                            this.ventana.getVentanaResultados().agregaResultado("Resta:\n");
-                                        }   
-                                        resString = arrayToString(res);
-                                        this.ventana.getVentanaResultados().agregaResultado(resString);
+                                        else
+                                            this.ventana.informarAlUsuario("Operacion no realizable: dimensiones distintas");
                                     }
                                     else
-                                        throw new Error004();
+                                        this.ventana.informarAlUsuario("Datos vacios.");
                                 }
                                 else
-                                    throw new Error005();
+                                    this.ventana.informarAlUsuario("Error: Columnas inexistentes");
+                                //verificar otros errores (columnas validas,etc)
                             }
                             else
-                                throw new Error003();
-                            //verificar otros errores (columnas validas,etc)
-                        }
-                        else
-                            throw new Error002();
+                                this.ventana.informarAlUsuario("Operación no realizable: argumentos inconsistentes");
                     }
                     else
-                        throw new Error000();
+                        this.ventana.informarAlUsuario("Error de sintaxis: <suma/resta> <columna_1> <columna_2> <salida>");
             }
             else if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[4])) // entra si es frecuencia
             {
-                //FRECUENCIA
+                if((lineaActual.get(1)!= null) && !isSalidaValida(lineaActual.get(1)) && (lineaActual.get(2)!= null) 
+                   && !isSalidaValida(lineaActual.get(2)) && (lineaActual.get(3)!= null)) /* verifico sintaxis */
+                    if (isSalidaValida(lineaActual.get(3)))
+                    {
+                        columna = conjuntoActivo.getColumna(lineaActual.get(1));
+                        if (columna != null)
+                        {
+                            resString = "Frecuencia: ";
+                            if (conjuntoActivo.isNumerico())
+                                resString += Calculador.frecuenciaPorcentual(columna, Double.parseDouble(lineaActual.get(2)));
+                            else
+                                resString += Calculador.frecuenciaPorcentual(columna, lineaActual.get(2));
+                            resString += " %";
+                            this.ventana.informarAlUsuario(resString);
+                        }
+                        else
+                            this.ventana.informarAlUsuario("Error: Columna inexistente");
+                    }
+                    else
+                        this.ventana.informarAlUsuario("Error: salida no valida");
+                else
+                    this.ventana.informarAlUsuario("Error de sintaxis:");
             }
             else if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[5]) || 
                     lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[6]) ||
@@ -147,58 +167,48 @@ public class Controlador implements ActionListener
                 {
                     if(isSalidaValida(lineaActual.get(2))) //verifico salida valida
                     {
-                        //OBTENER COLUMNA SEGUN SEA NRO A STRING!
-                        if(isColumnaExistente(columna))
+                        columna = conjuntoActivo.getColumna(lineaActual.get(1));
+
+                        if(columna != null)
                         {
                             if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[5])) //aca entra si es promedio
                             {
-                                if(isDatosNumericos(columna))
+                                if(conjuntoActivo.isNumerico())
                                 {
-                                    double res = calc.promedio(columna);
-                                    resString = res.toString();
-                                    this.ventana.getVentanaResultados().agregaResultado(resString);
-                                    
+                                    double res = Calculador.promedio((Double[]) columna);
+                                    this.ventana.getVentanaResultados().agregaResultado("Promedio: " + Double.toString(res));
                                 }
                                 else
-                                    throw new Error004();
+                                    this.ventana.informarAlUsuario("Operacion no realizable: conjunto no numerico");
                             }
                             else if(lineaActual.get(0).equalsIgnoreCase(Controlador.Comandos[6])) //aca entra si es histograma
                             {
-                                //LLAMAR A HISTOGRAMA SEGUN EL CONJUNTO DE DATOS Y GUARDAR EN resString!
-                                this.ventana.getVentanaResultados().agregaResultado(resString);
+                                if(conjuntoActivo.isNumerico())
+                                    resString = Calculador.histograma((Double[]) columna);
+                                else
+                                    resString = Calculador.histograma((String[]) columna);
+                                this.ventana.getVentanaHistograma().agregaHistograma(resString);
                             }
                             else //aca entra si es moda
                             {
-                                //LLAMAR A MODA SEGUN EL CONJUNTO DE DATOS Y GUARDAR EN resString!
-                                this.ventana.getVentanaResultados().agregaResultado(resString);
+                                this.ventana.getVentanaResultados().agregaResultado(Calculador.moda(columna));
                             }
                         }
                         else
-                            throw new Error003();
-                        }
+                            this.ventana.informarAlUsuario("Error: columna inexistente");
+                    }
                     else
-                        throw new Error002();
+                        this.ventana.informarAlUsuario("Error: salida no valida");
                 }
                 else
-                    throw new Error000();            
+                    this.ventana.informarAlUsuario("Error de sintaxis");          
             }
             else
-                throw new Error001();
+                this.ventana.informarAlUsuario("Error: operacion no conocida");
         }
     }
     
-    /*public boolean existeComando(String comando)
-    {
-        int i=0;
-        boolean existe = (comando.equalsIgnoreCase(Controlador.Comandos[0]));
-        while(!existe && (i<Controlador.Comandos.length))
-        {
-            i++;
-            existe = (comando.equalsIgnoreCase(Controlador.Comandos[i]));
-        }
-        return existe;
-    }*/
-    
+   
     public boolean isSalidaValida(String token)
     {
         int i=0;
@@ -211,17 +221,7 @@ public class Controlador implements ActionListener
         return retorno;
     }
     
-    public boolean isConjuntoExistente(String nombre)
-    {
-        //habria que buscar en el contenedor de conjuntos si existe el pedido
-    }
-    
-    public boolean isColumnaExistente(double[] columna)
-    {
-        //aca habria que llamar al cant col del conjuntoDatos
-    }
-    
-    public boolean isDatosNoFaltantes(double[] columna)
+    public boolean isDatosNoFaltantes(Double[] columna)
     {
         boolean res=false;
         int i=0;
@@ -233,14 +233,19 @@ public class Controlador implements ActionListener
         return res;
     }
     
-    public boolean isDimensionesIguales(double[] columna1, double[] columna2)
+    public File abrirArchivo(String nombre)
     {
-        return columna1.length == columna2.length;
-    }
-    
-    public boolean isDatosNumericos()
-    {
-        
+        File curDir = new File(".");
+        File[] filesList = curDir.listFiles();
+        int i = 0;
+        File retorno = null;
+        while((i < filesList.length) && (retorno == null))
+        {
+            if(filesList[i].isFile() && filesList[i].getName().equalsIgnoreCase(nombre)){ 
+                retorno = filesList[i];
+            }
+        }
+        return retorno;
     }
     
     public String listarArchivos()
@@ -258,7 +263,7 @@ public class Controlador implements ActionListener
     }
     
     
-    public String arrayToString(double[] columna)
+    public String arrayToString(Double[] columna)
     {
         StringBuilder sb = new StringBuilder(columna.length);
         for(int i= 0; i < columna.length ; i++){
@@ -266,5 +271,11 @@ public class Controlador implements ActionListener
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    @Override
+    public void windowClosing(WindowEvent e)
+    {
+       // ACA VA EL CODIGO PARA INVOCAR AL GRABADOR DE ARCHIVOS
     }
 }

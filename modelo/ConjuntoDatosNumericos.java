@@ -11,22 +11,26 @@ public class ConjuntoDatosNumericos extends ConjuntoDatos
     this.filas = filas;
   }
 
-  public Double[] getColumna(String nombreColumna) {
-    Double[] columna = new Double[filas.length];
-    int iColumna = this.nombresColumnas.get(nombreColumna);
-
-    for (int i = 0; i < filas.length; i++) {
-      columna[i] = filas[i][iColumna];
+  public Object[] getColumna(String nombreColumna) 
+  {
+    Double[] columna = null;
+    Integer iColumna = this.nombresColumnas.get(nombreColumna);
+    
+    if (iColumna != null)
+    {
+        columna = new Double[filas.length];
+        for (int i = 0; i < filas.length; i++)
+          columna[i] = filas[i][iColumna];
     }
-
     return columna;
   }
-
-  public void actualizarColumna(String nombreColumna, double[] columnaActualizada) {
+    
+  @Override  
+  public void actualizarColumna(String nombreColumna, Object[] columnaActualizada) {
     int iColumna = this.nombresColumnas.get(nombreColumna);
 
     for (int i = 0; i < filas.length; i++) {
-      filas[i][iColumna] = columnaActualizada[i];
+      filas[i][iColumna] = (Double) columnaActualizada[i];
     }
   }
 
@@ -47,7 +51,7 @@ public class ConjuntoDatosNumericos extends ConjuntoDatos
       String nombre = itrColumnas.next();
       System.out.print(nombre + ": ");
 
-      Double[] columna = this.getColumna(nombre);
+      Double[] columna = (Double[]) this.getColumna(nombre);
       for (int i = 0; i < columna.length; i++) {
         System.out.print("" + columna[i] + ", ");
       }
@@ -58,4 +62,10 @@ public class ConjuntoDatosNumericos extends ConjuntoDatos
   public int cantCol(){
     return this.filas[0].length;
   }
+  
+    @Override
+    public boolean isNumerico()
+    {
+        return true;
+    }
 }

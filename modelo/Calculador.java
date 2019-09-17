@@ -58,13 +58,13 @@ public class Calculador
         return prom;
     }
     
-    public static ArrayList<Object> moda(Object[] columna)
+    public static String moda(Object[] columna)
     {
-        ArrayList<Object> moda = new ArrayList<Object>();
         HashMap<Object, Integer> contador = new HashMap<Object, Integer>();
         int max = -1, cant, i;
         Iterator<Object> iter;
         Object valor;
+        String moda = "";
         
         for (i = 0; i < columna.length; i++)
         {
@@ -77,11 +77,13 @@ public class Calculador
                 max = cant;
         }
         iter = contador.keySet().iterator();
+        if (max != -1)
+            moda = Integer.toString(max)  + " Valores: ";
         while (iter.hasNext())
         {
             valor = iter.next();
             if (contador.get(valor) == max)
-                moda.add(valor);
+                moda = moda + valor + " ";
         }
 
         return moda;

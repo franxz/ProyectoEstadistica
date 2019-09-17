@@ -2,6 +2,7 @@
 package client;
 
 import javax.swing.DefaultListModel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 /**
@@ -19,6 +20,12 @@ public class Ventana extends javax.swing.JFrame
         initComponents();
     }
 
+
+    public JTextArea getJTAInformacion()
+    {
+        return jTAInformacion;
+    }
+
     public String getJTFComandos()
     {
         return jTFComandos.getText();
@@ -33,7 +40,12 @@ public class Ventana extends javax.swing.JFrame
     {
         return ventanaHistograma;
     }
-
+    
+    public void informarAlUsuario(String msj)
+    {
+        this.getJTAInformacion().append(msj);
+    }
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -51,7 +63,7 @@ public class Ventana extends javax.swing.JFrame
         jPanel18 = new javax.swing.JPanel();
         jPanel12 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jTAInformacion = new javax.swing.JTextArea();
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
@@ -117,10 +129,11 @@ public class Ventana extends javax.swing.JFrame
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(250, 150));
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jTextArea1.setPreferredSize(new java.awt.Dimension(250, 150));
-        jScrollPane1.setViewportView(jTextArea1);
+        jTAInformacion.setEditable(false);
+        jTAInformacion.setColumns(20);
+        jTAInformacion.setRows(5);
+        jTAInformacion.setPreferredSize(new java.awt.Dimension(250, 150));
+        jScrollPane1.setViewportView(jTAInformacion);
 
         jPanel12.add(jScrollPane1, java.awt.BorderLayout.CENTER);
 
@@ -339,8 +352,8 @@ public class Ventana extends javax.swing.JFrame
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea jTAInformacion;
     private javax.swing.JEditorPane jTFComandos;
-    private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 
 }
