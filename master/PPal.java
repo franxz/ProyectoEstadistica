@@ -5,7 +5,7 @@ import client.Ventana;
 
 import modelo.Controlador;
 
-public class Sistema
+public class PPal
 {
     public static void main(String[] args)
     {
