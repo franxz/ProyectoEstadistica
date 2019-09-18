@@ -1,7 +1,10 @@
 
 package client;
 
+import java.awt.event.ActionListener;
+
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -9,7 +12,7 @@ import javax.swing.JTextField;
  *
  * @author koste
  */
-public class Ventana extends javax.swing.JFrame
+public class Ventana extends javax.swing.JFrame implements IVista
 {
     private Resultados ventanaResultados = new Resultados(this,true);
     private Histograma ventanaHistograma = new Histograma(this,true);
@@ -20,7 +23,12 @@ public class Ventana extends javax.swing.JFrame
         initComponents();
     }
 
-
+    @Override
+    public void arrancar() {
+        pack();
+        setVisible(true);
+    }
+    
     public JTextArea getJTAInformacion()
     {
         return jTAInformacion;
@@ -45,6 +53,18 @@ public class Ventana extends javax.swing.JFrame
     {
         this.getJTAInformacion().append(msj);
     }
+
+
+    public JButton getJBEjecutar()
+    {
+        return jBEjecutar;
+    }
+
+    @Override
+    public void addActionListener(ActionListener actionListener)
+    {
+        this.getJBEjecutar().addActionListener(actionListener);
+    }
     
     /** This method is called from within the constructor to
      * initialize the form.
@@ -68,7 +88,7 @@ public class Ventana extends javax.swing.JFrame
         jPanel4 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
+        jBEjecutar = new javax.swing.JButton();
         jPanel8 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jPanel11 = new javax.swing.JPanel();
@@ -159,8 +179,8 @@ public class Ventana extends javax.swing.JFrame
 
         jPanel4.add(jPanel6);
 
-        jButton1.setText("Ejecutar");
-        jPanel7.add(jButton1);
+        jBEjecutar.setText("Ejecutar");
+        jPanel7.add(jBEjecutar);
 
         jPanel4.add(jPanel7);
 
@@ -314,9 +334,11 @@ public class Ventana extends javax.swing.JFrame
                          .Level
                          .SEVERE, null, ex);
         }
+    
         //</editor-fold>
 
         /* Create and display the form */
+        /*
         java.awt
             .EventQueue
             .invokeLater(new Runnable()
@@ -325,11 +347,11 @@ public class Ventana extends javax.swing.JFrame
                 {
                     new Ventana().setVisible(true);
                 }
-            });
+            });*/
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jBEjecutar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
@@ -355,5 +377,7 @@ public class Ventana extends javax.swing.JFrame
     private javax.swing.JTextArea jTAInformacion;
     private javax.swing.JEditorPane jTFComandos;
     // End of variables declaration//GEN-END:variables
+
+
 
 }
