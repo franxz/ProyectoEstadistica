@@ -63,16 +63,16 @@ public class ParserArchivo
         return ret;
     }
     
-    public static void grabarDatos(HashMap<String,ConjuntoDatosNumericos> conjuntos){//Los unicos que se graban son los conjuntos numericos.
+    public static void grabarDatos(ArrayList<ConjuntoDatosNumericos> conjuntos){//Los unicos que se graban son los conjuntos numericos.
                     FileWriter fw;
                     FileReader fr;
                     int i;
                     try {
-                        Iterator<ConjuntoDatosNumericos> it = conjuntos.values().iterator();
+                        Iterator<ConjuntoDatosNumericos> it = conjuntos.iterator();
                         while(it.hasNext()){
                             ConjuntoDatosNumericos conjuntoActual = it.next();
-                            File archivo = new File("C:\\JDeveloper\\mywork\\PruebaGrabacionArchivo\\"+conjuntoActual.getNombre()+".txt");//Poner el directorio real.
-                            File archivoTemporal = new File("C:\\JDeveloper\\mywork\\PruebaGrabacionArchivo\\ArchivoTemporal.txt");//Poner el directorio real.
+                            File archivo = new File("."+conjuntoActual.getNombre()+".txt");//No esta probado que funcione
+                            File archivoTemporal = new File("."+"ArchivoTemporal.txt");//No esta probado que funcione
                             fr = new FileReader(archivo);
                             fw = new FileWriter(archivoTemporal);
                             BufferedReader br = new BufferedReader(fr);

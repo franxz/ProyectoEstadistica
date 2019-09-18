@@ -179,7 +179,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JButton" name="jButton1">
+                <Component class="javax.swing.JButton" name="jBEjecutar">
                   <Properties>
                     <Property name="text" type="java.lang.String" value="Ejecutar"/>
                   </Properties>
