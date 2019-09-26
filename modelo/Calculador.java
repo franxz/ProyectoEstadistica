@@ -78,7 +78,7 @@ public class Calculador
         }
         iter = contador.keySet().iterator();
         if (max != -1)
-            moda = Integer.toString(max)  + " Valores: ";
+            moda = Integer.toString(max)  + " apariciones de: ";
         while (iter.hasNext())
         {
             valor = iter.next();
