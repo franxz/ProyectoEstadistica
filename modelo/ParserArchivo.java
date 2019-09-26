@@ -71,8 +71,8 @@ public class ParserArchivo
                         Iterator<ConjuntoDatosNumericos> it = conjuntos.iterator();
                         while(it.hasNext()){
                             ConjuntoDatosNumericos conjuntoActual = it.next();
-                            File archivo = new File("."+conjuntoActual.getNombre()+".txt");//No esta probado que funcione
-                            File archivoTemporal = new File("."+"ArchivoTemporal.txt");//No esta probado que funcione
+                            File archivo = new File(".\\Datos\\"+conjuntoActual.getNombre()+".dat");//No esta probado que funcione
+                            File archivoTemporal = new File(".\\Datos\\"+"ArchivoTemporal.dat");//No esta probado que funcione
                             fr = new FileReader(archivo);
                             fw = new FileWriter(archivoTemporal);
                             BufferedReader br = new BufferedReader(fr);
@@ -82,7 +82,6 @@ public class ParserArchivo
                             String filasColumnas = br.readLine();
                             int[] dimensiones = parsearDimensiones(filasColumnas);
                             String nombreColumnas = br.readLine();
-                            System.out.println(titulo+" "+descripcion+" "+filasColumnas);
                             bw.write(titulo);
                             bw.newLine();
                             bw.write(descripcion);
@@ -106,8 +105,7 @@ public class ParserArchivo
                         }
                     } catch (IOException e) 
                     {
-                        //Ver que poner aca
-                        System.out.println("No se pudo abrir el archivo.");     
+                        System.out.println(e.getStackTrace());     
                     }
         }
         

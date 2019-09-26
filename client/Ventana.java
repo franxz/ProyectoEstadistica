@@ -51,7 +51,7 @@ public class Ventana extends javax.swing.JFrame implements IVista
     
     public void informarAlUsuario(String msj)
     {
-        this.getJTAInformacion().append(msj);
+        this.getJTAInformacion().append(msj+"\n");
     }
 
 

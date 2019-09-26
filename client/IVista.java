@@ -6,7 +6,7 @@ import java.awt.event.WindowListener;
 
 public interface IVista
 {
-    public static final String EjecutarComandos = "Ejecutar comandos";
+    public static final String EjecutarComandos = "Ejecutar";
     
     public String getJTFComandos();
     public void informarAlUsuario(String msj);
