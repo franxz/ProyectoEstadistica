@@ -148,7 +148,8 @@ public class ParserArchivo
     {
         for(int i = 0; i < linea.length(); i++) 
         {
-            if((linea.charAt(i) < '0' || linea.charAt(i) > '9') && linea.charAt(i) != ',' && linea.charAt(i) != '.')
+            if((linea.charAt(i) < '0' || linea.charAt(i) > '9') && linea.charAt(i) != ',' && linea.charAt(i) != '.' 
+               && linea.charAt(i) != '-')
             {
                 return true;
             }
