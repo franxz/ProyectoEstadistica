@@ -18,14 +18,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
+
 public class Controlador extends WindowAdapter implements ActionListener
 {
+    /**
+     * @param Comandos Vector que contiene Strings con los posibles comandos a invocar.<br>
+     * @param Salidas Vector que contiene Strings con las posibles salidas.<br>
+     * @param Ventana Referencia a la ventana.<br>
+     * @param conjuntoDatos Contenedor de los conjuntos relevados.<br>
+     * @param conjuntoActivo Referencia al conjunto que se esta utilizando.<br>
+     */
     public static final String[] Comandos = {"LISTAR","USAR","SUMAR","RESTAR","FRECUENCIA","PROMEDIO","HISTOGRAMA","MODA"};
     public static final String[] Salidas = {"PANTALLA","IMPRESORA"};
     public static final int MAXCARFILES = 100;
     private IVista ventana;
     private HashMap<String, ConjuntoDatos> conjuntosDatos = new HashMap<String, ConjuntoDatos>();
     private ConjuntoDatos conjuntoActivo = null;
+
     
     public Controlador(IVista ventana)
     {
@@ -43,7 +52,15 @@ public class Controlador extends WindowAdapter implements ActionListener
             this.ejecutarComandos(lineas);
         }
     }
-    
+
+    /**
+     * Este metodo se encarga de la ejecucion de los comandos pedidos por el usuario y de lanzar los errores correspondientes si los hay.<br>
+     * 
+     * <b>pre:</b> Los strings estan separados correctamente para su analisis. <br>
+     * <b>post:</b> Se ejecuto la secuencia de comandos. <br>
+     * @param lineas Contenedor con los Strings de comandos a ejecutar. <br>
+     * 
+     */
     public void ejecutarComandos(ArrayList<String> lineas)
     {
         Object[] columna;
@@ -223,13 +240,25 @@ public class Controlador extends WindowAdapter implements ActionListener
         }
 
     }
-    
-   
+
+
+    /**
+     * El metodo valida que el String que llego corresponga a una salida valida.<br>
+     * 
+     * @param token String a validar.<br>
+     * @return Devuelve true en caso de token coincidir con una salida valida, en caso contrario false.<br>
+     */
     public boolean isSalidaValida(String token)
     {
         return token.equalsIgnoreCase(Controlador.Salidas[0]);
     }
-    
+
+    /**
+     * El metodo valida que no haya datos vacios en las columnas.<br>
+     * 
+     * @param columna Array con los valores de la columna.<br>
+     * @return True si ningun valor es vacio, en caso contrario false.<br>
+     */
     public boolean isDatosNoFaltantes(Double[] columna)
     {
         boolean res=false;
@@ -241,7 +270,13 @@ public class Controlador extends WindowAdapter implements ActionListener
         
         return res;
     }
-    
+
+    /**
+     * Este metodo se encarga de abrir el archivo indicado por el nombre.<br>
+     * 
+     * @param nombre Nombre del archivo que se desea abrir.<br>
+     * @return Retorna el archivo correspondiente o null en caso de no existir.<br>
+     */
     public File abrirArchivo(String nombre)
     {
         File curDir = new File(".\\Datos");
@@ -257,7 +292,12 @@ public class Controlador extends WindowAdapter implements ActionListener
         }
         return retorno;
     }
-    
+
+    /**
+     * Este metodo crea un String con todos los archivos abiertos ordenados adecuadamente.<br>
+     * 
+     * @return String con la lista de archivos.<br>
+     */
     public String listarArchivos()
     {
         StringBuilder sb = new StringBuilder(Controlador.MAXCARFILES);
@@ -271,8 +311,14 @@ public class Controlador extends WindowAdapter implements ActionListener
         }
         return sb.toString();
     }
-    
-    
+
+
+    /**
+     * Este metodo convierte la columna de Double en un String para poder ser mostrada.<br>
+     * 
+     * @param columna Array con los valores de la columna.<br>
+     * @return Retorna un String que se corresponde con la columna. <br>
+     */
     public String arrayToString(Double[] columna)
     {
         StringBuilder sb = new StringBuilder(columna.length);
@@ -283,6 +329,11 @@ public class Controlador extends WindowAdapter implements ActionListener
         return sb.toString();
     }
 
+    /**
+     * 
+     * 
+     * @param e
+     */
     @Override
     public void windowClosing(WindowEvent e)
     {
