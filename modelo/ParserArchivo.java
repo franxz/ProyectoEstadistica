@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
 public class ParserArchivo
@@ -62,8 +61,15 @@ public class ParserArchivo
         }
         return ret;
     }
-    
+
+    /**El metodo se encarga de grabar todos los conjuntos numericos.
+     * @param conjuntos : Es una lista que contiene a todos los conjuntos numericos.
+     * pre : conjuntos != null
+     * post : Cada conjunto numerico actualizo los valores de su matriz en un archivo cuyo nombre
+     *        es el del conjunto. 
+     */
     public static void grabarDatos(ArrayList<ConjuntoDatosNumericos> conjuntos){//Los unicos que se graban son los conjuntos numericos.
+                    assert conjuntos != null : "Parametro invalido,la lista de conjuntos no puede ser nula.";
                     FileWriter fw;
                     FileReader fr;
                     int i;
@@ -71,8 +77,8 @@ public class ParserArchivo
                         Iterator<ConjuntoDatosNumericos> it = conjuntos.iterator();
                         while(it.hasNext()){
                             ConjuntoDatosNumericos conjuntoActual = it.next();
-                            File archivo = new File(".\\Datos\\"+conjuntoActual.getNombre()+".dat");//No esta probado que funcione
-                            File archivoTemporal = new File(".\\Datos\\"+"ArchivoTemporal.dat");//No esta probado que funcione
+                            File archivo = new File(".\\Datos\\"+conjuntoActual.getNombre()+".dat");
+                            File archivoTemporal = new File(".\\Datos\\"+"ArchivoTemporal.dat");
                             fr = new FileReader(archivo);
                             fw = new FileWriter(archivoTemporal);
                             BufferedReader br = new BufferedReader(fr);

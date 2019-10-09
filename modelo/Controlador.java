@@ -1,20 +1,16 @@
 package modelo;
 
 import client.IVista;
-
 import client.Parser;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.awt.event.WindowAdapter;
-
 import java.awt.event.WindowEvent;
 
 import java.io.File;
 
 import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -330,7 +326,8 @@ public class Controlador extends WindowAdapter implements ActionListener
     }
 
     /**
-     * 
+     * Este metodo analiza cuales de los conjuntos almacenados son numericos y funciona de disparador para
+     * persistir a los mismos.
      * 
      * @param e
      */
