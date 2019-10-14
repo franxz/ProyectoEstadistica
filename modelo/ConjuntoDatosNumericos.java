@@ -11,8 +11,20 @@ public class ConjuntoDatosNumericos extends ConjuntoDatos
     this.filas = filas;
   }
 
+    /**
+     * Devuelve la columna solicitada.<br>
+     * 
+     * <b>pre:</b> El nombre no es null y tampoco corresponde a una salida. <br>
+     * <b>post:</b> Devuelve la columna solicitada, de no encontrarla, devolvera null. <br>
+     * 
+     * @param nombreColumna String que contiene el nombre de la columna solicitada.<br>
+     * 
+     * @return Devuelve la columna solicitada como un array de Object, null si no la encuentra. <br>
+     */
   public Object[] getColumna(String nombreColumna) 
   {
+      assert nombreColumna!=null : "nombreColumna es null" ;
+      assert nombreColumna.equalsIgnoreCase("PANTALLA") || nombreColumna.equalsIgnoreCase("IMPRESORA") : "nombreColumna es null" ;
     Double[] columna = null;
     Integer iColumna = this.nombresColumnas.get(nombreColumna);
     
@@ -25,8 +37,16 @@ public class ConjuntoDatosNumericos extends ConjuntoDatos
     return columna;
   }
     
+    /**
+     * Actualiza los valores de una columna existente.<br>
+     * 
+     * @param nombreColumna Nombre de la columna a actualizar.<br>
+     * @param columnaActualizada Array con los nuevos valores. <br>
+     * 
+     */
   @Override  
   public void actualizarColumna(String nombreColumna, Object[] columnaActualizada) {
+      assert this.filas!=null : "Matriz es nula" ;
     int iColumna = this.nombresColumnas.get(nombreColumna);
 
     for (int i = 0; i < filas.length; i++) {
@@ -36,27 +56,6 @@ public class ConjuntoDatosNumericos extends ConjuntoDatos
 
   public double[][] getMatriz() {
     return filas;
-  }
-
-  // metodo de debug, borrar antes de hacer la entrega !!! !!! !!! !!! !!! !!! !!! !!!
-  @Override
-  public void print() {
-    super.print();
-
-    System.out.println("Cantidad de filas: " + this.filas.length);
-    System.out.println("Cantidad de columnas: " + this.filas[0].length);
-
-    Iterator<String> itrColumnas = this.nombresColumnas.keySet().iterator();
-    while(itrColumnas.hasNext()) {
-      String nombre = itrColumnas.next();
-      System.out.print(nombre + ": ");
-
-      Double[] columna = (Double[]) this.getColumna(nombre);
-      for (int i = 0; i < columna.length; i++) {
-        System.out.print("" + columna[i] + ", ");
-      }
-      System.out.println("");
-    }
   }
 
   public int cantCol(){
