@@ -21,6 +21,8 @@ public class ConjuntoDatosNoNumericos extends ConjuntoDatos
      */
     public Object[] getColumna(String nombreColumna) 
   {
+      assert nombreColumna!=null : "nombreColumna es null" ;
+      assert nombreColumna.equalsIgnoreCase("PANTALLA") || nombreColumna.equalsIgnoreCase("IMPRESORA") : "nombreColumna es null" ;
     String[] columna = null;
     Integer iColumna = this.nombresColumnas.get(nombreColumna);
     
@@ -42,6 +44,7 @@ public class ConjuntoDatosNoNumericos extends ConjuntoDatos
      */
     @Override
   public void actualizarColumna(String nombreColumna, Object[] columnaActualizada) {
+        assert this.filas!=null : "Matriz es nula" ;
     int iColumna = this.nombresColumnas.get(nombreColumna);
 
     for (int i = 0; i < filas.length; i++) {

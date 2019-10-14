@@ -28,6 +28,7 @@ public class ParserArchivo
      */
     public static ConjuntoDatos obtenerConjuntoDatos(File archivo)
     {
+        assert archivo!=null : "El archivo es nulo";
         ConjuntoDatos ret = null;
         try {
             FileReader fr = new FileReader(archivo);
@@ -141,6 +142,9 @@ public class ParserArchivo
         
         private static String getFila(double[][] matriz,int i,int k)
         {
+            assert matriz!=null : "La matriz es nula";
+            assert i<matriz.length : "i fuera de dimension";
+            assert k<matriz[1].length : "k fuera de dimension";
             int j;
             String valores = "";
             for(j=0;j<k;j++)
@@ -163,6 +167,7 @@ public class ParserArchivo
      * @return Vector con los valores de fila y columna.<br>
      */
     private static int[] parsearDimensiones(String linea) {
+        assert linea.equalsIgnoreCase("") : "Linea vacia";
 	int iComa = linea.indexOf(",");
 	return new int[] {Integer.parseInt(linea.substring(0, iComa)), Integer.parseInt(linea.substring(iComa + 1))};  // [cantFilas, cantColumnas]
     }
@@ -181,9 +186,14 @@ public class ParserArchivo
 	int iComa = linea.indexOf(",");
 	
 	for (int i = 0; i < elementos.length - 1; i++) {
-            elementos[i] = linea.substring(0, iComa);	// obtengo un elemento
-            linea = linea.substring(iComa + 1);		// recorto la linea (le quito el elemento que obtuve)
-	    iComa = linea.indexOf(",");
+            if(iComa == 0){
+                elementos[i]="null";      //si no hay valor pongo null
+            }
+            else{
+                elementos[i] = linea.substring(0, iComa);	// obtengo un elemento
+            }
+            linea = linea.substring(iComa+1);   //recorto la linea
+            iComa = linea.indexOf(',');         //busco el nuevo indice de ,
         }
 	elementos[elementos.length - 1] = linea;	// obtengo el ultimo elemento
 	
@@ -195,14 +205,14 @@ public class ParserArchivo
      * 
      * @Param linea Contiene la linea a analizar. <br>
      * 
-     * @return booleano que sera verdaderos si hay elementos no numericos.<br>
+     * @return booleano que sera verdaderos si hay elementos no numericos o nulos.<br>
      */
     private static boolean noNumerico(String linea) 
     {
         for(int i = 0; i < linea.length(); i++) 
         {
             if((linea.charAt(i) < '0' || linea.charAt(i) > '9') && linea.charAt(i) != ',' && linea.charAt(i) != '.' 
-               && linea.charAt(i) != '-')
+               && linea.charAt(i) != '-' || (linea.charAt(i-1) == ',' && linea.charAt(i) == ','))
             {
                 return true;
             }
